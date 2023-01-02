@@ -5,8 +5,12 @@ import org.apache.spark.{SparkConf, SparkContext}
 
 object Spark02_Req1_HotCategoryTop10Analysis {
   def main(args: Array[String]): Unit = {
+    //TODO : Top 10 热门品类
     var sparConf = new SparkConf().setMaster("local[*]").setAppName("HotCategoryTop10Analysis")
     val sc = new SparkContext(sparConf)
+    //Q:actionRDD 重复使用
+    //Q: cogroup 性能可能较低
+
     //1.读取原始日志数据
     val actionRDD = sc.textFile("datas/user_visit_action.txt")
     //2. 统计品类的点击数量
@@ -48,10 +52,10 @@ object Spark02_Req1_HotCategoryTop10Analysis {
         datas(10) != "null"
       }
     )
-    val payCount = payActionRDD.flatMap(
+    val payCountRDD = payActionRDD.flatMap(
       action => {
         val datas = action.split("_")
-        val cid = datas(8)
+        val cid = datas(10)
         val cids = cid.split(",")
         cids.map(id => (id, 1))
       }
@@ -60,36 +64,33 @@ object Spark02_Req1_HotCategoryTop10Analysis {
     //    点击数量排序，下单数量排序，支付数量排序
     //    元组排序：先比较第一个，再比较第二个，再比较第三个，依次类推
     //    （品类ID，（点击数量，下单数量，支付数量）
-    println("3" * 100)
     orderCountRDD.take(10).foreach(println)
-    println("4" * 100)
-    payCount.take(10).foreach(println)
-    println("6" * 100)
-
-    val cogroupRDD: RDD[(String, (Iterable[Int], Iterable[Int], Iterable[Int]))] =
-      clickCountRDD.cogroup(orderCountRDD, payCount)
-    val analysisRDD = cogroupRDD.mapValues {
-      case (clickIter, orderIter, payIter) => {
-        var clickCnt = 0
-        val iter1 = clickIter.iterator
-        if (iter1.hasNext) {
-          clickCnt = iter1.next()
-        }
-        var orderCnt = 0
-        val iter2 = orderIter.iterator
-        if (iter2.hasNext) {
-          orderCnt = iter2.next()
-        }
-
-        var payCnt = 0
-        val iter3: Iterator[Int] = payIter.iterator
-        if (iter3.hasNext) {
-          payCnt = iter3.next()
-        }
-        (clickCnt, orderCnt, payCnt)
+    payCountRDD.take(10).foreach(println)
+    val rdd1: RDD[(String, (Int, Int, Int))] = clickCountRDD.map {
+      case (cid, cnt) => {
+        (cid, (cnt, 0, 0))
       }
     }
-    println("3" * 100)
+    val rdd2: RDD[(String, (Int, Int, Int))] = orderCountRDD.map {
+      case (cid, cnt) => {
+        (cid, (0, cnt, 0))
+      }
+    }
+    val rdd3: RDD[(String, (Int, Int, Int))] = payCountRDD.map {
+      case (cid, cnt) => {
+        (cid, (0, 0, cnt))
+      }
+    }
+
+    //将三个数据源合并在一起，统一进行聚合计算
+    val sourceRDD: RDD[(String, (Int, Int, Int))] = rdd1.union(rdd2).union(rdd3)
+    val analysisRDD: RDD[(String, (Int, Int, Int))] = sourceRDD.reduceByKey(
+      (t1, t2) => {
+        (t1._1 + t2._1, t1._2 + t2._2, t1._3 + t2._3)
+      }
+    )
+
+
 
     val resultRDD = analysisRDD.sortBy(_._2, ascending = false).take(10)
     resultRDD.foreach(println)

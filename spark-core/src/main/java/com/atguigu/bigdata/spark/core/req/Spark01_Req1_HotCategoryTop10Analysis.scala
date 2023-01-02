@@ -51,7 +51,7 @@ object Spark01_Req1_HotCategoryTop10Analysis {
     val payCount = payActionRDD.flatMap(
       action => {
         val datas = action.split("_")
-        val cid = datas(8)
+        val cid = datas(10)
         val cids = cid.split(",")
         cids.map(id => (id, 1))
       }
