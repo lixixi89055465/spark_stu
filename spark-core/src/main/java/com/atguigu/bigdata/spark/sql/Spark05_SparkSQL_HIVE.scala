@@ -3,7 +3,7 @@ package com.atguigu.bigdata.spark.sql
 import org.apache.spark.SparkConf
 import org.apache.spark.sql._
 
-object Spark04_SparkSQL_JDBC {
+object Spark05_SparkSQL_HIVE{
 
   def main(args: Array[String]): Unit = {
     //TODO 创建SparkSQL的运行环境
