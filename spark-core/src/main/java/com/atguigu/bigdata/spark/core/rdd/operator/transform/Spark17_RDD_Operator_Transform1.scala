@@ -11,18 +11,18 @@ object Spark17_RDD_Operator_Transform1 {
       ("a", 1), ("a", 2), ("b", 3),
       ("b", 4), ("b", 5), ("a", 6)
     ), numSlices = 2)
-    rdd.aggregateByKey(zeroValue = 5)(
+//    rdd.aggregateByKey(zeroValue = 5)(
+//      (x, y) => math.max(x, y),
+//      (x, y) => x + y
+//    ).collect().foreach(println)
+    rdd.aggregateByKey(zeroValue = 1)(
       (x, y) => math.max(x, y),
       (x, y) => x + y
     ).collect().foreach(println)
-    rdd.aggregateByKey(zeroValue = 0)(
-      (x, y) => math.max(x, y),
-      (x, y) => x + y
-    ).collect().foreach(println)
-    rdd.aggregateByKey(zeroValue = 0)(
-      math.max(_, _),
-      _ + _
-    ).collect().foreach(println)
+//    rdd.aggregateByKey(zeroValue = 0)(
+//      math.max(_, _),
+//      _ + _
+//    ).collect().foreach(println)
 
     sc.stop()
   }

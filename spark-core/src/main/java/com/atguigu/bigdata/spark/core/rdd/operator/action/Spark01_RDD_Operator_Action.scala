@@ -23,7 +23,7 @@ object Spark01_RDD_Operator_Action {
     //first : 获取 数据源中第一个数据
 //    val first: Int = rdd.first()
 //    println(first)
-//    val ints: Array[Int] = rdd.take(3)
+//    val ints: Array[Int] = rdd.take(2)
 //    println(ints.mkString(","))
     //takeOrdered: 数据排序后，取N个数据
     val rdd1: RDD[Int] = sc.makeRDD(List(4,3,2,12))

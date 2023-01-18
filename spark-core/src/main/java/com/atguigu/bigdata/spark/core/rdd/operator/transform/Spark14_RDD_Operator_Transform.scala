@@ -12,7 +12,7 @@ object Spark14_RDD_Operator_Transform {
     //隐式转换（二次编译）
     //partitionBy根据指定的分区规则对数据进行重分区
     val mapRdd: RDD[(Int, Int)] = rdd.map((_, 1))
-    mapRdd.partitionBy(new HashPartitioner(partitions = 2)) //
+    mapRdd.partitionBy(new HashPartitioner(partitions = 3)) //
       .saveAsTextFile("output")
     sc.stop()
   }

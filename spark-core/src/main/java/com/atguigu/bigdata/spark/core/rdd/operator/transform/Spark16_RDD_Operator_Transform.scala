@@ -8,7 +8,7 @@ object Spark16_RDD_Operator_Transform {
     val sparkConf = new SparkConf().setMaster("local[*]").setAppName("operator")
     val sc = new SparkContext(sparkConf)
     val rdd: RDD[(String, Int)] = sc.makeRDD(List(
-      ("a", 5), ("a", 2), ("a", 3), ("b", 4)
+      ("a", 5), ("a", 2), ("a", 3), ("b", 4), ("b", 10)
     ))
     val groupRDD: RDD[(String, Iterable[Int])] = rdd.groupByKey()
     groupRDD.collect().foreach(println)

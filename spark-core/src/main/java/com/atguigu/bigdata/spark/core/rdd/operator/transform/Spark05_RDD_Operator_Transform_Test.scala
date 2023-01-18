@@ -15,7 +15,8 @@ object Spark05_RDD_Operator_Transform_Test {
         array.max
       }
     )
-    println(maxRDD.collect().sum)
+//    println(maxRDD.collect().sum)
+    maxRDD.collect().foreach(println)
 
     sc.stop()
   }

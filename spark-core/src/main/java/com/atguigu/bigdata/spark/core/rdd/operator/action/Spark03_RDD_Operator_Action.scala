@@ -12,7 +12,8 @@ object Spark03_RDD_Operator_Action {
     //13+ 17=30
     //aggregateByKey : 初始值指挥参与分区内计算
     //aggregate: 初始值会参与分区内计算，并且和参与分区间计算
-//    val result: Int = rdd.aggregate(10)(_ + _, _ + _)
+//    val result: Int = rdd.aggregate(100)(_ + _, _ + _)
+//    val result: Int = rdd.aggregate(0)(_ + _, _ + _)
     val result: Int = rdd.fold(10)(_ + _)
     println(result)
 

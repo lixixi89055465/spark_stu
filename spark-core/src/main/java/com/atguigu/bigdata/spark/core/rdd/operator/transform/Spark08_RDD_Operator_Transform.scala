@@ -15,11 +15,15 @@ object Spark08_RDD_Operator_Transform {
     //2. 第二个参数表示，数据源中每条数据被抽取的概率
     //3 第三个参数表示，抽取数据时随机算法的种子
     //            如果不传递第三个参数，那么使用的是当前系统的时间
-    println(rdd.sample(
-      withReplacement = false,
-      fraction = 0.4,
-//      seed = 2
-    ).collect().mkString(","))
+
+    for (i <- 1 until 5) {
+      println(rdd.sample(
+//        withReplacement = false,
+        withReplacement = true,
+        fraction = 0.4,
+        //      seed = 2
+      ).collect().mkString(","))
+    }
     sc.stop()
   }
 }
