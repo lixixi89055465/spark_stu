@@ -4,7 +4,7 @@ import org.apache.spark.SparkConf
 import org.apache.spark.streaming.dstream.{DStream, ReceiverInputDStream}
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 
-object SparkStreaming07_Output {
+object SparkStreaming07_Output1 {
   def main(args: Array[String]): Unit = {
 
     val sparkConf = new SparkConf().setMaster("local[*]").setAppName("SparkStreaming")
@@ -23,6 +23,7 @@ object SparkStreaming07_Output {
         Seconds(9), Seconds(3))
     //SparkStreaming如果没有输出操作，那么会提示错误
     //windowDS.print()
+
 
 
     ssc.start()
